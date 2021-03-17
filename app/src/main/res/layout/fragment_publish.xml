@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="30dp"
+    tools:context=".PublishFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/topicPub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Konu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/messagePub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topicPub"
+        android:layout_marginTop="30dp"
+        android:hint="Mesaj"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/viewqos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="qos:"
+        android:layout_below="@+id/messagePub"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"/>
+    <Spinner
+        android:id="@+id/qosPub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:entries="@array/spinnerItems"
+        android:layout_below="@+id/messagePub"
+        android:layout_toRightOf="@+id/viewqos"
+        android:layout_margin="30dp"/>
+    <TextView
+        android:id="@+id/txtRetain"
+        android:text="Retain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/qosPub"
+        android:paddingLeft="10dp"/>
+    <Switch
+        android:id="@+id/retainSw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/qosPub"
+        android:layout_toRightOf="@+id/txtRetain"
+        android:paddingLeft="10dp" />
+    <Button
+        android:id="@+id/btnPub"
+        android:text="Yayınla"
+        android:textAllCaps="false"
+        android:layout_below="@+id/retainSw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>
+
+
+
+
