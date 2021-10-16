@@ -5,28 +5,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_marginTop="20dp"
-    tools:context=".InfoFragment">
+    tools:context="com.memrekobak.mqttcontrolapp.InfoFragment">
 
 
 
 
-    <ImageView
-        android:id="@+id/infoImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/chat"
-        android:layout_centerHorizontal="true"/>
+
 
 
 
     <ListView
         android:id="@+id/listInfo"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/infoImage"
         android:divider="#005266"
-        android:dividerHeight="2dp"
-        android:layout_marginTop="20dp"/>
+        android:dividerHeight="2dp" />
 
 
 

@@ -5,47 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context=".ControlActivity">
+    tools:context="com.memrekobak.mqttcontrolapp.ControlActivity">
 
 
     <Button
         android:id="@+id/btnPublish"
-        android:layout_width="200dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:fontFamily="monospace"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Yayınla"
+        android:text="@string/publish"
         android:textAllCaps="false"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        />
-
-
+        android:layout_alignParentStart="true" />
 
 
     <Button
         android:id="@+id/btnSubscribe"
-        android:layout_width="200dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
         android:fontFamily="monospace"
         android:gravity="center"
+        android:text="@string/subscribe"
+        android:textAllCaps="false" />
+
+    <ImageView
+        android:id="@+id/infoImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnPublish"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Abone ol"
-        android:textAllCaps="false"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        />
-
-
-
+        android:background="@drawable/chat1"
+        android:contentDescription="@string/messaging_image" />
 
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnPublish"/>
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/infoImage">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
 
 
 </RelativeLayout>

@@ -1,17 +1,17 @@
-package com.example.mqttcontrolapp;
+package com.memrekobak.mqttcontrolapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,8 +23,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
-
-
 public class ControlActivity extends AppCompatActivity {
 
 
@@ -33,9 +31,8 @@ public class ControlActivity extends AppCompatActivity {
     FragmentClass fragmentClass = new FragmentClass(ControlActivity.this);
     Button btnSub;
     Button btnPub;
-
-
-    FirebaseFirestore fireDB=FirebaseFirestore.getInstance();
+    FirebaseFirestore fireDB = FirebaseFirestore.getInstance();
+    ProgressBar progressBar;
 
     @Override
     public void onBackPressed() {
@@ -59,22 +56,27 @@ public class ControlActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         if (savedInstanceState == null) {
 
-            fragmentClass.ChangeFragment(new InfoFragment());
-            LayoutName();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fragmentClass.ChangeFragment(new InfoFragment());
+                    LayoutName();
+                    progressBar=findViewById(R.id.progressInfo);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }, 1500);
+
 
         }
 
         btnPub = findViewById(R.id.btnPublish);
         btnSub = findViewById(R.id.btnSubscribe);
-        final Drawable drawPub = btnPub.getBackground();
-        final Drawable drawSub = btnSub.getBackground();
         btnPub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentClass.ChangeFragment(new PublishFragment());
-               // btnPub.setBackground(getResources().getDrawable(R.drawable.border));
-               // btnSub.setBackground(drawSub);
-                setTitle("Yayınla");
+                setTitle("Publish");
 
             }
         });
@@ -82,9 +84,7 @@ public class ControlActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fragmentClass.ChangeFragment(new SubscribeFragment());
-               // btnSub.setBackground(getResources().getDrawable(R.drawable.border));
-                //btnPub.setBackground(drawPub);
-                setTitle("Abone ol");
+                setTitle("Subscribe");
 
             }
         });
@@ -103,7 +103,7 @@ public class ControlActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {//menu seçim durumu
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {//menu
         if (item.getItemId() == R.id.log_out) {
             try {
                 mAuth = FirebaseAuth.getInstance();
@@ -126,9 +126,6 @@ public class ControlActivity extends AppCompatActivity {
             try {
                 fragmentClass.ChangeFragment(new InfoFragment());
                 LayoutName();
-               // btnPub.setBackgroundResource(android.R.drawable.btn_default_small);
-               // btnSub.setBackgroundResource(android.R.drawable.btn_default_small);
-
 
 
             } catch (Exception e) {
@@ -136,11 +133,11 @@ public class ControlActivity extends AppCompatActivity {
             }
 
 
-
         }
 
         return super.onOptionsItemSelected(item);
     }
+
     void LayoutName() {
         fireDB.collection("Users")
                 .whereEqualTo("UserID", mAuth.getUid())
@@ -156,11 +153,7 @@ public class ControlActivity extends AppCompatActivity {
                                 setTitle(servername);
 
 
-
                             }
-                        } else {
-                            setTitle("hata");
-                            // Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });

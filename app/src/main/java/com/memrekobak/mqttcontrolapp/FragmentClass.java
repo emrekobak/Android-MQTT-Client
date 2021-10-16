@@ -1,4 +1,4 @@
-package com.example.mqttcontrolapp;
+package com.memrekobak.mqttcontrolapp;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-
+import com.memrekobak.mqttcontrolapp.R;
 
 
 public class FragmentClass {

@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="20dp"
-    tools:context=".SubscribeFragment">
+    tools:context="com.memrekobak.mqttcontrolapp.SubscribeFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/topicSub"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="Konu"
+        android:hint="@string/topic"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -24,9 +24,10 @@
         android:id="@+id/viewqos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="qos:"
+        android:text="@string/qos"
         android:layout_toRightOf="@+id/topicSub"
-        android:layout_margin="20dp"/>
+        android:layout_margin="20dp"
+        android:layout_toEndOf="@+id/topicSub" />
     <Spinner
         android:id="@+id/qos"
         android:layout_width="wrap_content"
@@ -35,15 +36,15 @@
         android:padding="20dp"
         android:layout_toRightOf="@+id/viewqos"
         android:entries="@array/spinnerItems"
-        />
+        android:layout_toEndOf="@+id/viewqos" />
     <TextView
         android:id="@+id/txtBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bar Kullan(%)"
+        android:text="Use Bar(%)"
         android:layout_below="@id/viewqos"
         android:layout_toRightOf="@+id/topicSub"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="15dp"/>
 
 
     <CheckBox
@@ -58,7 +59,7 @@
         android:id="@+id/btnSub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Abone ol"
+        android:text="@string/subscribe"
         android:layout_below="@+id/viewqos"
         android:textAllCaps="false"/>
     <Button
@@ -68,8 +69,10 @@
         android:layout_below="@+id/viewqos"
         android:layout_toRightOf="@+id/btnSub"
         android:textAllCaps="false"
-        android:layout_marginLeft="20dp"
-        android:text="İptal et"/>
+        android:layout_marginLeft="10dp"
+        android:text="@string/unsubscribe"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/btnSub" />
     <SeekBar
         android:id="@+id/seekSub"
         android:layout_width="match_parent"
@@ -83,9 +86,9 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/btnSub"
+        android:layout_marginTop="30dp"
         android:divider="#005266"
-        android:dividerHeight="2dp"
-        android:layout_marginTop="30dp"/>
+        android:dividerHeight="2dp" />
 
 
 

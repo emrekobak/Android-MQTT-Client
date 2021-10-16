@@ -1,4 +1,4 @@
-package com.example.mqttcontrolapp;
+package com.memrekobak.mqttcontrolapp;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,10 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +26,9 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
+import java.util.HashMap;
+import java.util.concurrent.Executor;
+
 
 class MqttClass {
 
@@ -33,7 +39,8 @@ class MqttClass {
 
     private Context context;
     static MqttAndroidClient client;
-    FirebaseAuth mAuth;
+    MainActivity mainActivity;
+    FirebaseAuth mAuth=FirebaseAuth.getInstance();
     FirebaseFirestore fireDB = FirebaseFirestore.getInstance();
 
 
@@ -44,11 +51,8 @@ class MqttClass {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
 
-                    Toast.makeText(context, "Oturum Kapatıldı.", Toast.LENGTH_SHORT).show(); //hata
+                    Toast.makeText(context, "Disconnected.", Toast.LENGTH_SHORT).show();
 
-                    //  Log.d("client",client.toString());/////////////
-                    ///////
-                    /////BURAAAAAA calısıyor
 
                 }
 
@@ -61,8 +65,49 @@ class MqttClass {
             e.printStackTrace();
         }
     }
+    void AuthAnonymous(final String servername, final String serverAdr, final String username, final String passwd, final boolean mosq, final boolean user) {
 
-    void ConUser(final Context context, final String server, final String user, final String passwd, final String serverName) {
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            HashMap<String, Object> userMap = new HashMap<>();
+
+                            userMap.put("UserID", mAuth.getUid());
+                            userMap.put("ServerName", servername);
+                            userMap.put("ServerAddress", serverAdr);
+                            userMap.put("ServerUser", username);
+                            userMap.put("UserPassword", passwd);
+                            userMap.put("Mosquitto", mosq);
+                            userMap.put("PasswordAuth", user);
+
+                            fireDB.collection("Users").document().set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+
+                                        }
+                                    });
+
+
+                        }
+                    }
+                });
+
+
+    }
+
+
+    void ConUser(final Context context, final String server, final String user, final String passwd, final String serverName,final boolean mosqSw,final boolean userSw) {
 
         MqttConnectOptions opt = new MqttConnectOptions();
         opt.setCleanSession(true);
@@ -79,15 +124,16 @@ class MqttClass {
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
+                    AuthAnonymous(serverName,server,user,passwd,mosqSw,userSw);
                     Intent intent = new Intent(context, ControlActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
-                    Toast.makeText(context, "Bağlandı", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Connected", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Toast.makeText(context, "Hata! Bilgileri Kontrol ediniz." + server, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Fail! Check Information", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -115,14 +161,16 @@ class MqttClass {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
                         Intent intent = new Intent(context, ControlActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
+                        Toast.makeText(context, "Connected", Toast.LENGTH_LONG).show();
 
                     }
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                         if (!TextUtils.isEmpty(passwd)) {
-                            Toast.makeText(context, "HATA bilgilerde değişiklik" + server, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Fail! Check Information", Toast.LENGTH_SHORT).show();
                             ConState();
                         }
                     }
@@ -152,14 +200,16 @@ class MqttClass {
                 token.setActionCallback(new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        // Connected
-                        Toast.makeText(context, "connected" + client, Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(context, ControlActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                        Toast.makeText(context, "Connected", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
 
-                        Toast.makeText(context, "Error" + server, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Fail! Check Information", Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (Exception e) {
@@ -172,22 +222,7 @@ class MqttClass {
 
 
     }
-    void ConNotUser(final Context context, final String server) {
-      /*  if (TextUtils.isEmpty(txtAddress.getText())) { //düzelt server ayrı hata
-            AlertDialog alertDialog   = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle("Uyarı"
-
-            "Sunucu adresi alanı boş bırakılamaz.");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
-
-            txtAddress.setError("Lütfen bu alanı doldurunuz");
-        } */
+    void ConNotUser(final Context context, final String server, final String serverName,final boolean mosqSw,final boolean userSw) {
 
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(context, server,
@@ -197,9 +232,11 @@ class MqttClass {
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
+                    AuthAnonymous(serverName,server,null,null,mosqSw,userSw);
                     Intent intent = new Intent(context, ControlActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
-                    Toast.makeText(context, "not user okey" + server, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
                     // Connected
                     // AuthAnonymous();
                 }
@@ -207,7 +244,7 @@ class MqttClass {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
 
-                    Toast.makeText(context, "error son" + server, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Fail! Check Information", Toast.LENGTH_SHORT).show();
 
                     // Something went wrong e.g. connection timeout or firewall problems
 
@@ -221,11 +258,11 @@ class MqttClass {
 
     void ManageUsers() {
 
-
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser currentUser = mAuth.getCurrentUser();
+        assert currentUser != null;
         Task<QuerySnapshot> ref = fireDB.collection("Users")
-                .whereEqualTo("UserID", mAuth.getUid())
+                .whereEqualTo("UserID", currentUser.getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -237,7 +274,7 @@ class MqttClass {
                                 document.getReference().delete();
 
                         } else {
-                            Toast.makeText(context, "hata manage", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Fail! Manage Users", Toast.LENGTH_SHORT).show();
                             // Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }

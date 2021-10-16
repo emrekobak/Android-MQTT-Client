@@ -7,38 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:49852739574:android:09e3e693f9a5af9e5ca1d7",
+        "mobilesdk_app_id": "1:49852739574:android:7b4a630c4cbbea875ca1d7",
         "android_client_info": {
-          "package_name": "com.example.mqttcontrolapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "49852739574-d0f12vgc6bv3j74uul9b0t8gh2229o2e.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC9YsQerjwy3ISfwdk52aRdiOR6RtmAF38"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "49852739574-d0f12vgc6bv3j74uul9b0t8gh2229o2e.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:49852739574:android:be6301083b76fad65ca1d7",
-        "android_client_info": {
-          "package_name": "com.example.myapplication"
+          "package_name": "com.memrekobak.mqttcontrolapp"
         }
       },
       "oauth_client": [

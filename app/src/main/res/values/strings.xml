@@ -3,4 +3,20 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="publish">Publish</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="name">Name</string>
+    <string name="broker_address">Broker Address</string>
+    <string name="port_number">Port Number</string>
+    <string name="user">User</string>
+    <string name="password">Password</string>
+    <string name="user_and_password_authentication">User and Password Authentication</string>
+    <string name="use_mosquitto_broker">Use Mosquitto Broker</string>
+    <string name="connect">Connect</string>
+    <string name="topic">Topic</string>
+    <string name="message">Message</string>
+    <string name="qos">qos:</string>
+    <string name="retain">Retain</string>
+    <string name="unsubscribe">Unsubscribe</string>
+    <string name="messaging_image">Messaging Image</string>
 </resources>

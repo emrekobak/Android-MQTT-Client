@@ -1,32 +1,28 @@
-package com.example.mqttcontrolapp;
+package com.memrekobak.mqttcontrolapp;
 
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
+
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,8 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-
-import java.util.Date;
 import java.util.HashMap;
 
 
@@ -47,33 +41,32 @@ public class MainActivity extends AppCompatActivity {
     EditText txtPort;
     EditText txtName;
     Button button;
-    Switch userSw;
-    Switch mosqSw;
+    SwitchCompat userSw;
+    SwitchCompat mosqSw;
     String username;
     String passwd;
     String serverAdr;
     String serverName;
-    String port;
-    private FirebaseAuth mAuth;
     MqttClass mqttClass = new MqttClass(MainActivity.this);
+    FirebaseUser user;
     FirebaseFirestore fireDB = FirebaseFirestore.getInstance();
-
+    boolean mosqsw;
+    boolean usersw = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser currentUser = mAuth.getCurrentUser();
+        mqttClass.mAuth = FirebaseAuth.getInstance();
+        user = mqttClass.mAuth.getCurrentUser();
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            if (currentUser != null) {
+            if (user != null) {
                 ControlAct();
-
             }
         } else {
-            Toast.makeText(MainActivity.this, "Lütfen internet bağlantınızı kontrol edin.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Please check internet connection.", Toast.LENGTH_SHORT).show();
         }
 
         txtUser = findViewById(R.id.txtUser);
@@ -90,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mosqSw.setChecked(true);
-                    txtName.setText("Mosquitto Sunucusu");
+                    txtName.setText("Mosquitto Broker");
                     txtName.setSelection(txtName.getText().length());
                     txtAddress.setText("my.mqttapp.xyz");
                     txtPort.setText("8883");
-                    serverAdr = "ssl://" + txtAddress.getText().toString() + ":" + txtPort.getText().toString();//"ssl://my.mqttapp.xyz:8883";;;
+                    serverAdr = "ssl://" + txtAddress.getText().toString() + ":" + txtPort.getText().toString();//"ssl://my.mqttapp.xyz:8883";;; ** currently out of service
                     userSw.setChecked(true);
                     userSw.setClickable(false);
                     txtAddress.setEnabled(false);
@@ -102,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
                     txtName.requestFocus();
                     txtUser.getText().clear();
                     txtPasswd.getText().clear();
-
+                    mosqsw = true;
                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                    alertDialog.setTitle("Uyarı");
-                    alertDialog.setMessage("Mosquitto sunucusuna yalnız tanımlı kullanıcılar bağlanabilir. Kullanıcı ve şifre bilgisi olmadan sunucuya bağlantı sağlanamaz.");
+                    alertDialog.setTitle("Caution");
+                    alertDialog.setMessage("Mosquitto broker is not available. If you want, you can make corrections to the code and add your own broker.");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -124,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     txtPasswd.getText().clear();
                     userSw.setClickable(true);
                     txtName.requestFocus();
+                    mosqsw = false;
                 }
 
             }
@@ -140,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     txtAddress.getText().clear();
                     txtPort.getText().clear();
                     txtName.requestFocus();
+                    usersw = true;
                 } else {
                     txtUser.setVisibility(View.INVISIBLE);
                     txtPasswd.setVisibility(View.INVISIBLE);
@@ -149,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     txtUser.getText().clear();
                     txtPasswd.getText().clear();
                     txtName.requestFocus();
+                    usersw = false;
 
 
                 }
@@ -166,15 +162,13 @@ public class MainActivity extends AppCompatActivity {
                 username = txtUser.getText().toString();
                 passwd = txtPasswd.getText().toString();
                 serverName = txtName.getText().toString();
-                mAuth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = mAuth.getCurrentUser();
-                if (currentUser != null) {
+                if (user != null) {
                     mqttClass.ManageUsers();
-                    currentUser.delete();
-                    mAuth.signOut();
+                    user.delete();
+                    mqttClass.mAuth.signOut();
                 }
                 if (mosqSw.isChecked()) {
-                    ConMosquitto();
+                   // ConMosquitto();
 
                 } else if (!mosqSw.isChecked() && userSw.isChecked()) {
                     txtName.getText().clear();
@@ -184,9 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     ConNotUserpass();
-
                 }
-
 
             }
 
@@ -195,83 +187,84 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void AuthAnonymous() {
+//    void AuthAnonymous() {
+//
+//        mqttClass.mAuth.signInAnonymously()
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//
+//                            HashMap<String, Object> userMap = new HashMap<>();
+//
+//                            userMap.put("UserID", mqttClass.mAuth.getUid());
+//                            userMap.put("ServerName", serverName);
+//                            userMap.put("ServerAddress", serverAdr);
+//                            userMap.put("ServerUser", username);
+//                            userMap.put("UserPassword", passwd);
+//                            userMap.put("Mosquitto", mosqSw.isChecked());
+//                            userMap.put("PasswordAuth", userSw.isChecked());
+//
+//                            fireDB.collection("Users").document().set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//
+//
+//                                }
+//                            })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//
+//
+//                                        }
+//                                    });
+//
+//
+//                        }
+//                    }
+//                });
+//
+//
+//    }
 
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
 
-                            HashMap<String, Object> userMap = new HashMap<>();
-
-                            userMap.put("UserID", mAuth.getUid());
-                            userMap.put("ServerName", serverName);
-                            userMap.put("ServerAddress", serverAdr);
-                            userMap.put("ServerUser", username);
-                            userMap.put("UserPassword", passwd);
-                            userMap.put("Mosquitto", mosqSw.isChecked());
-                            userMap.put("PasswordAuth", userSw.isChecked());
-
-                            fireDB.collection("Users").document().set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-                                }
-                            })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-
-
-                                        }
-                                    });
-
-
-                        }
-                    }
-                });
-
-
-    }
-
-
-    void ConMosquitto() {
-        if (TextUtils.isEmpty(txtUser.getText()) || TextUtils.isEmpty(txtPasswd.getText()) || TextUtils.isEmpty(txtAddress.getText())) {
-            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle("Uyarı");
-            alertDialog.setMessage("Kullanıcı ve parola doğrulaması ile bağlanmayı seçtiniz. Gerekli Alanları lütfen doldurunuz.");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
-            if (TextUtils.isEmpty(txtUser.getText()) && TextUtils.isEmpty(txtPasswd.getText())) {
-                txtUser.setError("Lütfen bu alanı doldurunuz!");
-                txtPasswd.setError("Lütfen bu alanı doldurunuz!");
-            }
-            if (TextUtils.isEmpty(txtUser.getText())) {
-                txtUser.setError("Lütfen bu alanı doldurunuz!");
-            }
-            if (TextUtils.isEmpty(txtPasswd.getText())) {
-                txtPasswd.setError("Lütfen bu alanı doldurunuz!");
-            }
-
-        } else {
-
-            AuthAnonymous();
-            mqttClass.ConUser(getApplicationContext(), serverAdr, username, passwd, serverName);
-
-        }
-    }
+//    void ConMosquitto() {  ** Not Avaible **
+//        if (TextUtils.isEmpty(txtUser.getText()) || TextUtils.isEmpty(txtPasswd.getText()) || TextUtils.isEmpty(txtAddress.getText())) {
+//            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//            alertDialog.setTitle("Caution");
+//            alertDialog.setMessage("You have chosen to connect with user and password authentication. Please fill in the required fields.\n");
+//            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//            alertDialog.show();
+//            if (TextUtils.isEmpty(txtUser.getText()) && TextUtils.isEmpty(txtPasswd.getText())) {
+//                txtUser.setError("Please fill this field!");
+//                txtPasswd.setError("Please fill this field!");
+//            }
+//            if (TextUtils.isEmpty(txtUser.getText())) {
+//                txtUser.setError("Please fill this field!");
+//            }
+//            if (TextUtils.isEmpty(txtPasswd.getText())) {
+//                txtPasswd.setError("Please fill this field!");
+//            }
+//
+//        } else {
+//
+//            AuthAnonymous();
+//            mqttClass.ConUser(getApplicationContext(), serverAdr, username, passwd, serverName);
+//
+//        }
+//    }
 
     void ConUserpass() {
         if (TextUtils.isEmpty(txtUser.getText()) || TextUtils.isEmpty(txtPasswd.getText()) || TextUtils.isEmpty(txtAddress.getText()) || TextUtils.isEmpty(txtPort.getText())) {
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle("Uyarı");
-            alertDialog.setMessage("Lütfen gerekli alanları doldurun.");
+            alertDialog.setTitle("Caution");
+            alertDialog.setMessage("Please fill in the required fields.");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -280,28 +273,28 @@ public class MainActivity extends AppCompatActivity {
                     });
             alertDialog.show();
             if (TextUtils.isEmpty(txtUser.getText()) && TextUtils.isEmpty(txtPasswd.getText()) && TextUtils.isEmpty(txtPort.getText()) && TextUtils.isEmpty(txtAddress.getText())) {
-                txtUser.setError("Lütfen bu alanı doldurunuz!");
-                txtPasswd.setError("Lütfen bu alanı doldurunuz!");
-                txtPort.setError("Lütfen bu alanı doldurunuz!");
-                txtAddress.setError("Lütfen bu alanı doldurunuz!");
+                txtUser.setError("Please fill this field!");
+                txtPasswd.setError("Please fill this field!");
+                txtPort.setError("Please fill this field!");
+                txtAddress.setError("Please fill this field!");
             }
             if (TextUtils.isEmpty(txtAddress.getText())) {
-                txtAddress.setError("Lütfen bu alanı doldurunuz!");
+                txtAddress.setError("Please fill this field!");
             }
             if (TextUtils.isEmpty(txtPort.getText())) {
-                txtPort.setError("Lütfen bu alanı doldurunuz!");
+                txtPort.setError("Please fill this field!");
             }
             if (TextUtils.isEmpty(txtUser.getText())) {
-                txtUser.setError("Lütfen bu alanı doldurunuz!");
+                txtUser.setError("Please fill this field!");
             }
             if (TextUtils.isEmpty(txtPasswd.getText())) {
-                txtPasswd.setError("Lütfen bu alanı doldurunuz!");
+                txtPasswd.setError("Please fill this field!");
             }
 
         } else {
-            serverAdr = txtAddress.getText().toString() + ":" + txtPort.getText().toString();//"ssl://my.mqttapp.xyz:8883"
-            AuthAnonymous();
-            mqttClass.ConUser(getApplicationContext(), serverAdr, username, passwd, serverName);
+            serverAdr = "tcp://" + txtAddress.getText().toString() + ":" + txtPort.getText().toString();
+//            AuthAnonymous();
+            mqttClass.ConUser(getApplicationContext(), serverAdr, username, passwd, serverName, mosqsw, usersw);
 
         }
     }
@@ -311,8 +304,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(txtAddress.getText()) || TextUtils.isEmpty(txtPort.getText())) {
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle("Uyarı");
-            alertDialog.setMessage("Lütfen gerekli alanları doldurun.");
+            alertDialog.setTitle("Caution");
+            alertDialog.setMessage("Please fill in the required fields.");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -321,19 +314,18 @@ public class MainActivity extends AppCompatActivity {
                     });
             alertDialog.show();
             if (TextUtils.isEmpty(txtAddress.getText()) && TextUtils.isEmpty(txtPort.getText())) {
-                txtUser.setError("Lütfen bu alanı doldurunuz!");
-                txtPasswd.setError("Lütfen bu alanı doldurunuz!");
+                txtUser.setError("Please fill this field!");
+                txtPasswd.setError("Please fill this field!");
             }
             if (TextUtils.isEmpty(txtAddress.getText())) {
-                txtAddress.setError("Lütfen bu alanı doldurunuz!");
+                txtAddress.setError("Please fill this field!");
             }
             if (TextUtils.isEmpty(txtPort.getText())) {
-                txtPort.setError("Lütfen bu alanı doldurunuz!");
+                txtPort.setError("Please fill this field!");
             }
         } else {
-            serverAdr = txtAddress.getText().toString() + ":" + txtPort.getText().toString();//"ssl://my.mqttapp.xyz:8883"
-            AuthAnonymous();
-            mqttClass.ConNotUser(getApplicationContext(), serverAdr);
+            serverAdr = "tcp://" + txtAddress.getText().toString() + ":" + txtPort.getText().toString();
+            mqttClass.ConNotUser(getApplicationContext(), serverAdr, serverName, mosqsw, usersw);
 
         }
 
@@ -342,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
     void ControlAct() {
 
         fireDB.collection("Users")
-                .whereEqualTo("UserID", mAuth.getUid())
+                .whereEqualTo("UserID", mqttClass.mAuth.getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -359,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (mosquitto || passwdAuth) {
                                     mqttClass.ReConUser(getApplicationContext(), serverAddress, user, password);
 
-                                } else if (!passwdAuth) {
+                                } else {
                                     mqttClass.ReConNotUser(getApplicationContext(), serverAddress);
                                 }
 

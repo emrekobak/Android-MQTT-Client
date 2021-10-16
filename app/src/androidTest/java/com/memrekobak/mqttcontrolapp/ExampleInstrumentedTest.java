@@ -1,4 +1,4 @@
-package com.example.mqttcontrolapp;
+package com.memrekobak.mqttcontrolapp;
 
 import android.content.Context;
 

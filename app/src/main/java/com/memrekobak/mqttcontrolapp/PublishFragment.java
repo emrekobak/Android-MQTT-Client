@@ -1,4 +1,4 @@
-package com.example.mqttcontrolapp;
+package com.memrekobak.mqttcontrolapp;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.memrekobak.mqttcontrolapp.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.eclipse.paho.client.mqttv3.MqttException;

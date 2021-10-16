@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center|top"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context="com.memrekobak.mqttcontrolapp.MainActivity">
 
     <ImageView
         android:layout_width="100dp"
@@ -19,30 +19,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/ic_mode_edit_black_24dp"
         android:drawableLeft="@drawable/ic_mode_edit_black_24dp"
-        android:hint="Sunucu Adı">
+        android:hint="@string/name" />
 
-
-    </EditText>
 
     <EditText
         android:id="@+id/txtAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/ic_cloud_queue_black_24dp"
         android:drawableLeft="@drawable/ic_cloud_queue_black_24dp"
-        android:hint="Sunucu Adresi">
+        android:hint="@string/broker_address" />
 
-
-    </EditText>
 
     <EditText
         android:id="@+id/txtPort"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/ic_visibility_black_24dp"
         android:drawableLeft="@drawable/ic_visibility_black_24dp"
-        android:hint="Port Numarası">
+        android:hint="@string/port_number">
 
     </EditText>
 
@@ -51,51 +50,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/ic_account_circle_black_24dp"
         android:drawableLeft="@drawable/ic_account_circle_black_24dp"
-        android:hint="Kullanıcı">
+        android:hint="@string/user" />
 
-
-    </EditText>
 
     <EditText
         android:id="@+id/txtPasswd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/ic_vpn_key_black_24dp"
         android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
-        android:hint="Şifre"
-        android:inputType="textPassword">
+        android:hint="@string/password"
+        android:inputType="textPassword" />
 
 
-    </EditText>
-
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/mosqSw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"
+        android:drawableStart="@drawable/ic_verified_user_black_24dp"
         android:drawableLeft="@drawable/ic_verified_user_black_24dp"
-        android:hint="Mosquitto Sunucusunu Kullanacağım">
+        android:hint="@string/use_mosquitto_broker" />
 
-    </Switch>
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/userSw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
+        android:drawableStart="@drawable/ic_lock_open_black_24dp"
         android:drawableLeft="@drawable/ic_lock_open_black_24dp"
-        android:hint="Kullanıcı ve Parola Doğrulaması Kullanacağım"/>
+        android:hint="@string/user_and_password_authentication" />
+
     <Button
         android:id="@+id/btnConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BAĞLAN"
+        android:text="@string/connect"
+        android:textAllCaps="false"
         android:textColor="#FCFBF9"
-        android:textSize="15dp"/>
-
-
-
+        android:textSize="15sp" />
 
 
 </LinearLayout>
