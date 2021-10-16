@@ -9,7 +9,7 @@ This project was carried out for messaging purposes using the mqtt protocol.
 * Firebase Anonymous Authentication https://firebase.google.com/docs/auth/android/anonymous-auth
 
 * Firabase Firestore https://firebase.google.com/docs/firestore
-
+* Flaticon
 * Icons made by Freepik https://www.freepik.com
 * Icons made by Flaticon https://www.flaticon.com/
 
