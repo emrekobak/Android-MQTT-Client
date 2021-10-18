@@ -19,4 +19,6 @@
     <string name="retain">Retain</string>
     <string name="unsubscribe">Unsubscribe</string>
     <string name="messaging_image">Messaging Image</string>
+    <string name="logout">Logout</string>
+    <string name="info">Info</string>
 </resources>

@@ -100,7 +100,7 @@ public class SubscribeFragment extends Fragment {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                arrayList.add(0, "Mesaj: " + new String(message.getPayload()) + " " + "Konu: " + topic);
+                arrayList.add(0, "Message: " + new String(message.getPayload()) + " " + "Topic: " + topic);
                 adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, android.R.id.text1, arrayList);   //////qos eklenecek. mesaj sırası tamam.
                 listInfo.setAdapter(adapter);
                 int value = Integer.parseInt(message.toString());

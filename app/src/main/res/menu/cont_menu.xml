@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/info"    android:title="Bilgi"/>
-    <item android:id="@+id/log_out" android:title="Çıkış Yap"/>
+    <item android:id="@+id/info"    android:title="@string/info"/>
+    <item android:id="@+id/log_out" android:title="@string/logout"/>
 
 
 </menu>
