@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/kobak/AndroidStudioProjects/MqttControlApp/app/src/main/res/drawable/ic_vpn_key_black_24dp.xml" value="0.403125" />
         <entry key="..\:/Users/kobak/AndroidStudioProjects/MqttControlApp/app/src/main/res/layout/activity_control.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/kobak/AndroidStudioProjects/MqttControlApp/app/src/main/res/layout/activity_main.xml" value="0.22554347826086957" />
         <entry key="..\:/Users/kobak/AndroidStudioProjects/MqttControlApp/app/src/main/res/layout/fragment_info.xml" value="0.22554347826086957" />

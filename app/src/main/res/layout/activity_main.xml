@@ -12,7 +12,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/mosqlogo" />
+        android:background="@drawable/conlogo" />
 
     <EditText
         android:id="@+id/txtName"
