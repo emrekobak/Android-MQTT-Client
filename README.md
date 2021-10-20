@@ -1,8 +1,8 @@
-# Description
+## Description
 This project was carried out for messaging purposes using the mqtt protocol.
 
 
-## Sources and Attribute
+## Sources
 
 Eclipse Paho Android Service
 
