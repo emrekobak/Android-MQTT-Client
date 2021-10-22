@@ -65,16 +65,13 @@ public class InfoFragment extends Fragment {
                                 arrayList.add("User ID: " + userId);
                                 arrayList.add("Server Name: " + servername);
                                 arrayList.add("Server Address: " + serverAddress);
-                                arrayList.add("Kullanıcı: " + user);
+                                arrayList.add("User: " + user);
 
                                 adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, android.R.id.text1, arrayList);
                                 listInfo.setAdapter(adapter);
 
 
                             }
-                        } else {
-
-                            // Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
