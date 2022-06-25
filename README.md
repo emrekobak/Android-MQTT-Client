@@ -26,6 +26,6 @@ Firabase Firestore https://firebase.google.com/docs/firestore
 Icon made by Freepik from www.flaticon.com
 
 ## Contact
-Mehmet Emre KOBAK
+Mehmet Emre Kobak
 
 Mail: kobakmehmetemre@gmail.com
